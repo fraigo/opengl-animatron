@@ -11,10 +11,19 @@
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
 #include <GLUT/glut.h>
-#else
+#endif
+
+#ifdef __WINDOWS__
 #include <windows.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <GL/glut.h>
+#endif
+
+#ifdef __linux__
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glut.h>
 #endif
 
 #include <math.h>
