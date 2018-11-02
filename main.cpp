@@ -1,15 +1,25 @@
  /* 
- TAREA 2 - COMPUTER GRAPHICS
+ COMPUTER GRAPHICS
  3D Modeling and transformations
  Francisco Igor
- 499273-3 
 */
 
-#include <windows.h>
 #include <stdio.h>
-#include <gl\gl.h>
-#include <gl\glut.h>
 #include <math.h>
+#include <stdlib.h>
+#include <string.h> 
+
+#ifdef __APPLE__
+#  include <OpenGL/gl.h>
+#  include <OpenGL/glu.h>
+#  include <GLUT/glut.h>
+#else
+#  include <windows.h>
+#  include <GL/gl.h>
+#  include <GL/glu.h>
+#  include <GL/glut.h>
+#endif
+
 
 #include "objeto.h"
 

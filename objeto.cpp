@@ -1,6 +1,15 @@
 #include <stdio.h>
-#include <gl\gl.h>
-#include <gl\glut.h>
+
+#ifdef __APPLE__
+#  include <OpenGL/gl.h>
+#  include <OpenGL/glu.h>
+#  include <GLUT/glut.h>
+#else
+#  include <windows.h>
+#  include <GL/gl.h>
+#  include <GL/glu.h>
+#endif
+
 #include <math.h>
 #include "objeto.h"
 
