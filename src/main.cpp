@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
 
 	printf("Computer Graphics\n\nAnimatron Project\n\n");
 	printf("Perspective mode\n KEY [p]\n");
-	printf("Rotate articulations \n KEYS [8-2  4-6]\n");
+	printf("Rotate articulations \n KEYS [w-s a-d] [8-2 4-6]\n");
 	printf("Perspective mode\n KEY [p]\n");
 	printf("To rotate each shape drag the mouse around the scenario\n");
 	printf("(rotations are in the vertical and horizontal directions)\n");
@@ -190,23 +190,25 @@ void rotateObject(int num, int k, double x0, double y0, double z0)
 	y2 = o[num].Y2;
 	z2 = o[num].Z2;
 
-	if (k == '8')
+	//printf("%d\n",k);
+
+	if (k == '8' || k == 'w')
 	{
 		rotar(y0, z0, &y1, &z1, ROT1);
 		rotar(y0, z0, &y2, &z2, ROT1);
 	}
-	if (k == '2')
+	if (k == '2' || k == 's')
 	{
 		rotar(y0, z0, &y1, &z1, -ROT1);
 		rotar(y0, z0, &y2, &z2, -ROT1);
 	}
 
-	if (k == '6')
+	if (k == '6' || k == 'd')
 	{
 		rotar(x0, y0, &x1, &y1, ROT1);
 		rotar(x0, y0, &x2, &y2, ROT1);
 	}
-	if (k == '4')
+	if (k == '4' || k == 'a')
 	{
 		rotar(x0, y0, &x1, &y1, -ROT1);
 		rotar(x0, y0, &x2, &y2, -ROT1);
@@ -263,7 +265,7 @@ void start(void)
 		{
 			o[cont].set(puntos[px], puntos[py]);
 			o[cont].setColor(0.5, 0.5, 0.5);
-			printf("%d-%d (%f,%f - %f,%f)\n", px, py, puntos[px].x, puntos[px].y, puntos[py].x, puntos[py].y);
+			//printf("%d-%d (%f,%f - %f,%f)\n", px, py, puntos[px].x, puntos[px].y, puntos[py].x, puntos[py].y);
 			cont++;
 		}
 	}
@@ -355,7 +357,7 @@ void display(void)
 	// draw help text
 	glColor3f(1.0f, 0.0f, 0.0f);
 	glRasterPos3f(-3.9, 3.6, -0.4);
-	printString("TEST");
+	//printString("TEST");
 
 	glPushMatrix();
 
