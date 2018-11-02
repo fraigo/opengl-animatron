@@ -11,7 +11,7 @@
 #endif
 
 #include <math.h>
-#include "objeto.h"
+#include "object3d.h"
 
 
 

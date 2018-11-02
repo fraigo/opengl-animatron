@@ -21,7 +21,7 @@
 #endif
 
 
-#include "objeto.h"
+#include "object3d.h"
 
 #define PROF -10.0
 #define ROT1 3.141592653/100
