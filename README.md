@@ -6,3 +6,7 @@ OpenGL C++ Animated character control
 * Uses a file-based format to build a body
 * You can control body parts using keyboard
 
+## Screenshot
+
+![Animatron running](srcreenshots/animatron.gif)
+
