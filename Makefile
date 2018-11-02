@@ -21,8 +21,9 @@ endif
 
 
 CC=g++
-SOURCES= main.cpp object3d.cpp
-DEPS= object3d.h
+SRC=src
+SOURCES= $(SRC)/main.cpp $(SRC)/object3d.cpp
+DEPS= $(SRC)/object3d.h
 OBJECTS=$(SOURCES:.cpp=.o)
 
 
@@ -32,7 +33,7 @@ all: $(EXE) clean
 $(EXE): $(OBJECTS)
 		$(CC) $(OBJECTS) -o $@ $(LDFLAGS)
 
-.cpp.o:
+$(SRC)/.cpp.o:
 		$(CC) $(LDFLAGS) -c $*.cpp
 
 clean: 

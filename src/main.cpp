@@ -220,7 +220,7 @@ void start(void)
 {
 	FILE *pt;
 	int px, py, pz, cont = 0, num;
-	pt = fopen("puntos.dat", "r");
+	pt = fopen("dat/puntos.dat", "r");
 	if (!pt)
 	{
 		printf("Failed to open puntos.dat\n");
@@ -241,7 +241,7 @@ void start(void)
 	fclose(pt);
 	NUMPOINTS = cont;
 
-	pt = fopen("segment.dat", "r");
+	pt = fopen("dat/segment.dat", "r");
 	if (!pt)
 	{
 		printf("No se pudo abrir el archivo segment.dat\n");
@@ -262,7 +262,7 @@ void start(void)
 
 	NUMSEGMENTS = cont;
 
-	pt = fopen("depend.dat", "r");
+	pt = fopen("dat/depend.dat", "r");
 	if (!pt)
 	{
 		printf("No se pudo abrir el archivo depend.dat\n");
