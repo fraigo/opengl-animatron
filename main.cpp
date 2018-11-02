@@ -73,13 +73,13 @@ float LASTROTX1 = 0, LASTROTY1 = 0;
 float LASTROTX2 = 0, LASTROTY2 = 0;
 
 int SELECTED = 0;
-int NUMPUNTOS = 0;
-int NUMSEGMENTOS = 0;
-int NUMDEPENDENCIAS = 0;
+int NUMPOINTS = 0;
+int NUMSEGMENTS = 0;
+int NUMDEPS = 0;
 
 struct coord puntos[200];
 Object3D o[100];
-int dependencia[100][2];
+int dependency[100][2];
 
 /* init GLUT function */
 void init(void);
@@ -104,7 +104,7 @@ void display(void);
 int main(int argc, char *argv[])
 {
 
-	printf("Computer Graphics\n\nFinal Project.\n\n");
+	printf("Computer Graphics\n\nAnimatron Project\n\n");
 	printf("Perspective mode\n KEY [p]\n");
 	printf("Rotate articulations \n KEYS [8-2  4-6]\n");
 	printf("Perspective mode\n KEY [p]\n");
@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
 	SIZEY = 500;
 	glutInitWindowSize(SIZEX, SIZEY);
 	glutInitWindowPosition(100, 30);
-	glutCreateWindow("CG Project");
+	glutCreateWindow("Animatron Project");
 
 	/* Call to local init function */
 	init();
@@ -168,7 +168,7 @@ void rotar(double x0, double y0, double *x1, double *y1, double ROT)
 	*y1 = y0 + (*x1 - x0) * sin(ROT) * 1.001 + (*y1 - y0) * cos(ROT);
 }
 
-void rotarObjeto(int num, int k, double x0, double y0, double z0)
+void rotateObject(int num, int k, double x0, double y0, double z0)
 {
 
 	double x1, y1, z1, x2, y2, z2;
@@ -205,10 +205,10 @@ void rotarObjeto(int num, int k, double x0, double y0, double z0)
 
 	o[num].set(x1, y1, z1, x2, y2, z2);
 
-	for (i = 0; i < NUMDEPENDENCIAS; i++)
+	for (i = 0; i < NUMDEPS; i++)
 	{
-		if (dependencia[i][0] == num)
-			rotarObjeto(dependencia[i][1], k, x0, y0, z0);
+		if (dependency[i][0] == num)
+			rotateObject(dependency[i][1], k, x0, y0, z0);
 	}
 
 	//printf("%f;%f;%f;%f;%f;%f;%f\n" ,o[num].X1,o[num].Y1,o[num].Z1,o[num].X2,o[num].Y2,o[num].Z2,o[num].largo);
@@ -222,7 +222,7 @@ void start(void)
 	pt = fopen("puntos.dat", "r");
 	if (!pt)
 	{
-		printf("No se pudo abrir el archivo puntos.dat\n");
+		printf("Failed to open puntos.dat\n");
 		exit(0);
 	};
 
@@ -238,7 +238,7 @@ void start(void)
 		}
 	}
 	fclose(pt);
-	NUMPUNTOS = cont;
+	NUMPOINTS = cont;
 
 	pt = fopen("segment.dat", "r");
 	if (!pt)
@@ -259,7 +259,7 @@ void start(void)
 		}
 	}
 
-	NUMSEGMENTOS = cont;
+	NUMSEGMENTS = cont;
 
 	pt = fopen("depend.dat", "r");
 	if (!pt)
@@ -270,12 +270,12 @@ void start(void)
 	cont = 0;
 	while (!feof(pt))
 	{
-		num = fscanf(pt, "%d,%d", &dependencia[cont][0], &dependencia[cont][1]);
+		num = fscanf(pt, "%d,%d", &dependency[cont][0], &dependency[cont][1]);
 		if (num == 2)
 			cont++;
 	}
 
-	NUMDEPENDENCIAS = cont;
+	NUMDEPS = cont;
 }
 
 /* drawing function */
@@ -292,7 +292,7 @@ void display(void)
 	rotX = (float)MOUSEDX / (float)(SIZEX / 2);
 	rotY = -(float)MOUSEDY / (float)(SIZEY / 2);
 
-	sprintf(titulo, "PUNTOS %d   SEGMENTOS %d", NUMPUNTOS, NUMSEGMENTOS);
+	sprintf(titulo, "Animatron - Points %d / Segments %d", NUMPOINTS, NUMSEGMENTS);
 
 	glutSetWindowTitle(titulo);
 
@@ -321,11 +321,11 @@ void display(void)
 
 	if (KEY == 9)
 		SELECTED++;
-	if (SELECTED >= NUMSEGMENTOS)
+	if (SELECTED >= NUMSEGMENTS)
 		SELECTED = 0;
 
 	// rotaciones
-	rotarObjeto(SELECTED, KEY, o[SELECTED].X1, o[SELECTED].Y1, o[SELECTED].Z1);
+	rotateObject(SELECTED, KEY, o[SELECTED].X1, o[SELECTED].Y1, o[SELECTED].Z1);
 
 	//clear
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -361,7 +361,7 @@ void display(void)
 	// cabeza
 	glColor4f(1, 1, 0, 0.7);
 	glPushMatrix();
-	glTranslated(o[NUMSEGMENTOS - 1].X2, o[NUMSEGMENTOS - 1].Y2, o[NUMSEGMENTOS - 1].Z2);
+	glTranslated(o[NUMSEGMENTS - 1].X2, o[NUMSEGMENTS - 1].Y2, o[NUMSEGMENTS - 1].Z2);
 	glutSolidSphere(1, 16, 16);
 	glPopMatrix();
 
@@ -375,7 +375,7 @@ void display(void)
 	glEnd();
 
 	// dibujar segmentos
-	for (i = 0; i < NUMSEGMENTOS; i++)
+	for (i = 0; i < NUMSEGMENTS; i++)
 		if (SELECTED == i)
 			o[i].display(1);
 		else
