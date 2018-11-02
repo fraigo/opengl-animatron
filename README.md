@@ -8,5 +8,6 @@ OpenGL C++ Animated character control
 
 ## Screenshot
 
-![Animatron running](srcreenshots/animatron.gif)
+![Animatron running](screenshots/animatron.gif)
+
 
