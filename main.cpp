@@ -2,6 +2,7 @@
  COMPUTER GRAPHICS
  3D Modeling and transformations
  Francisco Igor
+ franciscoigor@gmail.com
 */
 
 #include <stdio.h>

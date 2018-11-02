@@ -1,3 +1,9 @@
+/* 
+ Object3D Class
+ 3D Object properties and actions
+ Francisco Igor
+*/
+
 #define width 0.08
 
 

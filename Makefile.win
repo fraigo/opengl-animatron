@@ -1,12 +1,12 @@
-# Project: Proyecto2
+# Project: Animatron
 # Makefile created by Dev-C++ 4.9.9.2
 
 CPP  = g++.exe
 CC   = gcc.exe
 WINDRES = windres.exe
 RES  = 
-OBJ  = main.o objeto.o $(RES)
-LINKOBJ  = main.o objeto.o $(RES)
+OBJ  = main.o object3d.o $(RES)
+LINKOBJ  = main.o object3d.o $(RES)
 LIBS =  -L"C:/Dev-Cpp/lib" -lopengl32 -lglu32 -lglut32  
 INCS =  -I"C:/Dev-Cpp/include" 
 CXXINCS =  -I"C:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"C:/Dev-Cpp/include/c++/3.4.2/backward"  -I"C:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"C:/Dev-Cpp/include/c++/3.4.2"  -I"C:/Dev-Cpp/include" 
@@ -29,5 +29,5 @@ $(BIN): $(OBJ)
 main.o: main.cpp
 	$(CPP) -c main.cpp -o main.o $(CXXFLAGS)
 
-objeto.o: objeto.cpp
-	$(CPP) -c objeto.cpp -o objeto.o $(CXXFLAGS)
+object3d.o: object3d.cpp
+	$(CPP) -c object3d.cpp -o object3d.o $(CXXFLAGS)
