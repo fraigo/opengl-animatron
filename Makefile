@@ -2,19 +2,19 @@ OSNAME := $(shell uname)
 RM = rm
 
 # Windows (default)
-EXE = bin/linuxanimatron-win.exe
+EXE = animatron-win.exe
 LDFLAGS = -lopengl32 -lglu32 -lglut32
 CFLAGS = 
 
 # Linux (cygwin)
 ifeq "$(OSNAME)" "Linux"
-    EXE = bin/linux/animatron-linux
+    EXE = animatron-linux
 	LDFLAGS = -lGL -lGLU -lglut
 endif
 
 # OS X
 ifeq "$(OSNAME)" "Darwin"
-	EXE = bin/macos/animatron-macos
+	EXE = animatron-macos
     LDFLAGS = -L/System/Library/Frameworks -framework GLUT -framework OpenGL
 endif
 

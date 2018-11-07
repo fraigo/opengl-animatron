@@ -12,6 +12,7 @@
 		CED4AB532192C7FB00FC4958 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED4AB522192C7FB00FC4958 /* OpenGL.framework */; };
 		CED4AB552192C80A00FC4958 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED4AB542192C80A00FC4958 /* GLUT.framework */; };
 		CED4AB572192CA7D00FC4958 /* dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = CED4AB562192CA5C00FC4958 /* dat */; };
+		CED4AB5C2192CD5900FC4958 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = CED4AB592192CD5800FC4958 /* Makefile */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -36,6 +37,10 @@
 		CED4AB522192C7FB00FC4958 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		CED4AB542192C80A00FC4958 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		CED4AB562192CA5C00FC4958 /* dat */ = {isa = PBXFileReference; lastKnownFileType = folder; path = dat; sourceTree = SOURCE_ROOT; };
+		CED4AB582192CD5800FC4958 /* run.linux.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = run.linux.sh; sourceTree = "<group>"; };
+		CED4AB592192CD5800FC4958 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		CED4AB5A2192CD5800FC4958 /* run.macos.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = run.macos.sh; sourceTree = "<group>"; };
+		CED4AB5B2192CD5800FC4958 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +59,10 @@
 		CED4AB382192C75600FC4958 = {
 			isa = PBXGroup;
 			children = (
+				CED4AB592192CD5800FC4958 /* Makefile */,
+				CED4AB5B2192CD5800FC4958 /* README.md */,
+				CED4AB582192CD5800FC4958 /* run.linux.sh */,
+				CED4AB5A2192CD5800FC4958 /* run.macos.sh */,
 				CED4AB432192C75600FC4958 /* opengl-animatron */,
 				CED4AB422192C75600FC4958 /* Products */,
 				CED4AB512192C7FA00FC4958 /* Frameworks */,
@@ -145,6 +154,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CED4AB5C2192CD5900FC4958 /* Makefile in Sources */,
 				CED4AB4F2192C7EA00FC4958 /* main.cpp in Sources */,
 				CED4AB502192C7EA00FC4958 /* object3d.cpp in Sources */,
 			);
