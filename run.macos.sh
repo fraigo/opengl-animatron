@@ -1,3 +1,3 @@
 #!/bin/bash
-./build.macos.sh
-animatron-macos
+make
+./animatron-macos
