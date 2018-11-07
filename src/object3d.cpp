@@ -84,7 +84,7 @@ void Object3D::set(struct coord a, struct coord b)
     set(a.x, a.y, a.z, b.x, b.y, b.z);
 };
 
-void Object3D::display(int selected)
+void Object3D::display(bool selected)
 {
     //double anguloxy = angulo(X2 - X1, Y2 - Y1);
     double dx, dy, dz, xx, yy, zz;
@@ -103,6 +103,9 @@ void Object3D::display(int selected)
     glPushMatrix();
     glTranslated(X1, Y1, Z1);
     glutSolidSphere(width * 2, 10, 10);
+    // set material color for light
+    glColorMaterial(GL_FRONT_AND_BACK,GL_DIFFUSE);
+    glEnable(GL_COLOR_MATERIAL);
     glPopMatrix();
 
     xx = X1;

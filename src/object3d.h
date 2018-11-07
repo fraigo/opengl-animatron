@@ -27,6 +27,6 @@ public:
      void set(struct coord a,struct coord b);
      void set(double x2,double y2,double z2);
      void setColor(double r,double g,double b);
-     void display(int selected);
+     void display(bool selected);
       
 };

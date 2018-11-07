@@ -11,6 +11,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
@@ -79,7 +80,7 @@ float MOUSEXf, MOUSEYf, MOUSEXf2, MOUSEYf2;
 char KEY;
 float SCALE1 = 1, SCALE2 = 1;
 float COLOR2 = 1, COLOR1 = 1;
-int VIEWMODE = 1, TYPE = 1;
+int VIEWMODE = 1, TYPE = 1, LIGHTMODE = -1;
 float LASTROTX1 = 0, LASTROTY1 = 0;
 float LASTROTX2 = 0, LASTROTY2 = 0;
 
@@ -91,6 +92,8 @@ int NUMDEPS = 0;
 struct coord puntos[200];
 Object3D o[100];
 int dependency[100][2];
+int keys[1024];
+int currentKey = 0;
 
 /* init GLUT function */
 void init(void);
@@ -102,6 +105,8 @@ void click(int button, int state, int posX, int posY);
 void motion(int x, int y);
 /* Keyboard press function */
 void keyboard(unsigned char key, int posX, int posY);
+/* Keyboard special press function */
+void keyboard1(int key, int posX, int posY);
 /* Prints a string */
 void printString(char *s);
 /* Inits the raster font */
@@ -110,26 +115,30 @@ void makeRasterFont(void);
 void start(void);
 /* drawing function */
 void display(void);
+/* window id */
+int win;
 
 /* Main Program */
 int main(int argc, char *argv[])
 {
 
 	printf("Computer Graphics\n\nAnimatron Project\n\n");
-	printf("Perspective mode\n KEY [p]\n");
-	printf("Rotate articulations \n KEYS [w-s a-d] [8-2 4-6]\n");
-	printf("Perspective mode\n KEY [p]\n");
-	printf("To rotate each shape drag the mouse around the scenario\n");
+	printf("Rotate articulations    KEYS [UP-DOWN LEFT-RIGHT] [8-2 4-6]\n");
+    printf("Perspective mode        KEY [p]\n");
+    printf("Light mode              KEY [l]\n");
+    printf("Exit key                KEY [Esc]\n");
+    printf("To rotate each shape drag the mouse around the scenario\n");
 	printf("(rotations are in the vertical and horizontal directions)\n");
 
-	/* Calls to init window */
+    SIZEX = 500;
+    SIZEY = 500;
+    
+    /* Calls to init window */
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-	SIZEX = 500;
-	SIZEY = 500;
 	glutInitWindowSize(SIZEX, SIZEY);
-	glutInitWindowPosition(100, 30);
-	glutCreateWindow("Animatron Project");
+	glutInitWindowPosition(100, 100);
+	win = glutCreateWindow("Animatron Project");
 
 	/* Call to local init function */
 	init();
@@ -141,6 +150,7 @@ int main(int argc, char *argv[])
 	glutMouseFunc(click);
 	glutMotionFunc(motion);
 	glutKeyboardFunc(keyboard);
+    glutSpecialFunc(keyboard1);
 
 	/* Starts the action! */
 	glutMainLoop();
@@ -153,16 +163,12 @@ int main(int argc, char *argv[])
 void init(void)
 {
 	GLfloat params[2] = {0.0, 0.0};
-	//GLfloat pos[4] = {0.5, 0.5, 20.0, 20.0};
 	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//glEnable (GL_LIGHTING);
-	//glEnable(GL_LIGHT0);
-	glShadeModel(GL_SMOOTH);
+    glShadeModel(GL_SMOOTH);
 	glLightModelfv(GL_LIGHT_MODEL_LOCAL_VIEWER, params);
-	//glLightfv(GL_LIGHT0, GL_POSITION, pos);
-	glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+    glClearColor(1.0f, 1.0f, 1.0f, 0.5f);
 	MOUSEX = 0;
 	MOUSEY = 0;
 	MOUSEDX = 0;
@@ -184,33 +190,33 @@ void rotateObject(int num, int k, double x0, double y0, double z0)
 
 	double x1, y1, z1, x2, y2, z2;
 	int i;
-
-	x1 = o[num].X1;
+    
+    x1 = o[num].X1;
 	y1 = o[num].Y1;
 	z1 = o[num].Z1;
 	x2 = o[num].X2;
 	y2 = o[num].Y2;
 	z2 = o[num].Z2;
+    
+    
 
-	//printf("%d\n",k);
-
-	if (k == '8' || k == 'w')
+	if (k == '8' || k == GLUT_KEY_UP)
 	{
 		rotar(y0, z0, &y1, &z1, ROT1);
 		rotar(y0, z0, &y2, &z2, ROT1);
 	}
-	if (k == '2' || k == 's')
+	if (k == '2' || k == GLUT_KEY_DOWN)
 	{
 		rotar(y0, z0, &y1, &z1, -ROT1);
 		rotar(y0, z0, &y2, &z2, -ROT1);
 	}
 
-	if (k == '6' || k == 'd')
+	if (k == '6' || k == GLUT_KEY_RIGHT)
 	{
 		rotar(x0, y0, &x1, &y1, ROT1);
 		rotar(x0, y0, &x2, &y2, ROT1);
 	}
-	if (k == '4' || k == 'a')
+	if (k == '4' || k == GLUT_KEY_LEFT)
 	{
 		rotar(x0, y0, &x1, &y1, -ROT1);
 		rotar(x0, y0, &x2, &y2, -ROT1);
@@ -231,7 +237,7 @@ void rotateObject(int num, int k, double x0, double y0, double z0)
 void start(void)
 {
 	FILE *pt;
-	int px, py, pz, cont = 0, num;
+	int px, py, pz, cont = 0, num, key;
 	pt = fopen("dat/puntos.dat", "r");
 	if (!pt)
 	{
@@ -287,8 +293,25 @@ void start(void)
 		if (num == 2)
 			cont++;
 	}
+    NUMDEPS = cont;
+    
+    pt = fopen("dat/keys.dat", "r");
+    if (!pt)
+    {
+        printf("No se pudo abrir el archivo keys.dat\n");
+        exit(0);
+    };
+    cont = 0;
+    while (!feof(pt))
+    {
+        num = fscanf(pt, "%d", &key);
+        keys[cont] = key;
+        currentKey = cont;
+        if (num == 1)
+            cont++;
+    }
 
-	NUMDEPS = cont;
+	
 }
 
 /* drawing function */
@@ -307,6 +330,11 @@ void display(void)
 	sprintf(titulo, "Animatron - Points %d / Segments %d", NUMPOINTS, NUMSEGMENTS);
 
 	glutSetWindowTitle(titulo);
+    
+    if (KEY == 27){
+        glutDestroyWindow ( win );
+        exit (0);
+    }
 
 	if (KEY == 'x')
 		SCALE1 -= 0.2;
@@ -335,6 +363,20 @@ void display(void)
 		SELECTED++;
 	if (SELECTED >= NUMSEGMENTS)
 		SELECTED = 0;
+    
+    if (KEY == 'l'){
+        LIGHTMODE *= -1;
+    }
+    if (LIGHTMODE>0){
+        GLfloat pos[4] = {0.5, 0.5, 20.0, 20.0};
+        glEnable (GL_LIGHTING);
+        glEnable(GL_LIGHT0);
+        glLightfv(GL_LIGHT0, GL_POSITION, pos);
+    }else{
+        glDisable(GL_LIGHTING);
+        glDisable(GL_LIGHT0);
+    }
+    
 
 	// rotaciones
 	rotateObject(SELECTED, KEY, o[SELECTED].X1, o[SELECTED].Y1, o[SELECTED].Z1);
@@ -358,8 +400,7 @@ void display(void)
 	// draw help text
 	glColor3f(1.0f, 0.0f, 0.0f);
 	glRasterPos3f(-3.9, 3.6, -0.4);
-	//printString("TEST");
-
+	
 	glPushMatrix();
 
 	// alejar
@@ -370,29 +411,55 @@ void display(void)
 
 	//printf("%1.2f %1.2f\n",rotX,rotY);
 
-	// cabeza
+	// head
 	glColor4f(1, 1, 0, 0.7);
 	glPushMatrix();
 	glTranslated(o[NUMSEGMENTS - 1].X2, o[NUMSEGMENTS - 1].Y2, o[NUMSEGMENTS - 1].Z2);
 	glutSolidSphere(1, 16, 16);
 	glPopMatrix();
-
+    // nose
+    /** /
+    glColor4f(1, 0.5, 0.5, 0.7);
+    glPushMatrix();
+    glTranslated(o[NUMSEGMENTS - 1].X2, o[NUMSEGMENTS - 1].Y2, o[NUMSEGMENTS - 1].Z2+1);
+    glutSolidSphere(0.2, 10, 10);
+    glPopMatrix();
+    /**/
+    // eyes
+    glColor4f(0.5, 0.5, 1.0, 0.7);
+    glPushMatrix();
+    glTranslated(o[NUMSEGMENTS - 1].X2-0.3, o[NUMSEGMENTS - 1].Y2 + 0.3, o[NUMSEGMENTS - 1].Z2+0.8);
+    glutSolidSphere(0.2, 10, 10);
+    glPopMatrix();
+    glPushMatrix();
+    glTranslated(o[NUMSEGMENTS - 1].X2+0.3, o[NUMSEGMENTS - 1].Y2 + 0.3, o[NUMSEGMENTS - 1].Z2+0.8);
+    glutSolidSphere(0.2, 10, 10);
+    glPopMatrix();
+    
+    
+    // dibujar segmentos
+    double miny  = 0;
+    for (i = 0; i < NUMSEGMENTS; i++){
+        if (o[i].Y1 < miny){
+            miny = o[i].Y1;
+        }
+        if (o[i].Y2 < miny){
+            miny = o[i].Y2;
+        }
+        o[i].display(SELECTED == i);
+    }
+    
 	// piso
 	glColor4f(0, 0, 0.5, 0.4);
 	glBegin(GL_QUADS);
-	glVertex3f(6, -7 - width * 2, 6);
-	glVertex3f(6, -7 - width * 2, -6);
-	glVertex3f(-6, -7 - width * 2, -6);
-	glVertex3f(-6, -7 - width * 2, 6);
+	glVertex3f(6, miny - width * 2, 6);
+	glVertex3f(6, miny - width * 2, -6);
+	glVertex3f(-6, miny - width * 2, -6);
+	glVertex3f(-6, miny - width * 2, 6);
 	glEnd();
 
-	// dibujar segmentos
-	for (i = 0; i < NUMSEGMENTS; i++)
-		if (SELECTED == i)
-			o[i].display(1);
-		else
-			o[i].display(0);
-
+	
+		
 	glPopMatrix();
 
 	KEY = 0;
@@ -440,11 +507,50 @@ void motion(int x, int y)
 	glutPostRedisplay();
 }
 
+void review(int i){
+    KEY = i;
+    printf("%d\n",i);
+    keyboard1(KEY, 0, 0);
+}
+
 /* Keyboard press function */
 void keyboard(unsigned char key, int posX, int posY)
 {
 	KEY = key;
+    if (key == 13){
+        // copy replay data
+        int lastKey=currentKey;
+        int lastkeys[1024];
+        for (int i=0; i<lastKey; i++){
+            lastkeys[i] = keys[i];
+        }
+        init();
+        start();
+        SELECTED = 0;
+        for(int i=0; i<lastKey; i++){
+            printf("Key %d : %d\n", i, lastkeys[i]);
+            if (keys[i]==13){
+                break;
+            }
+            glutTimerFunc(1000+i*100,review,lastkeys[i]);
+        }
+        return;
+    }
+    keys[currentKey] = key;
+    currentKey++;
+    
 	glutPostRedisplay();
+}
+
+/* Keyboard press function */
+void keyboard1(int key, int posX, int posY)
+{
+    KEY = key;
+    
+
+    keys[currentKey] = key;
+    currentKey++;
+    glutPostRedisplay();
 }
 
 /* Set up the raster font used to display text */
