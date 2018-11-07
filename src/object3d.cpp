@@ -4,6 +4,7 @@
  Francisco Igor
  franciscoigor@gmail.com
 */
+#define GL_SILENCE_DEPRECATION true
 
 #include <stdio.h>
 
@@ -85,7 +86,7 @@ void Object3D::set(struct coord a, struct coord b)
 
 void Object3D::display(int selected)
 {
-    double anguloxy = angulo(X2 - X1, Y2 - Y1);
+    //double anguloxy = angulo(X2 - X1, Y2 - Y1);
     double dx, dy, dz, xx, yy, zz;
     double RES = 20;
     int c;

@@ -5,6 +5,8 @@
  franciscoigor@gmail.com
 */
 
+#define GL_SILENCE_DEPRECATION true
+
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -151,7 +153,7 @@ int main(int argc, char *argv[])
 void init(void)
 {
 	GLfloat params[2] = {0.0, 0.0};
-	GLfloat pos[4] = {0.5, 0.5, 20.0, 20.0};
+	//GLfloat pos[4] = {0.5, 0.5, 20.0, 20.0};
 	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -295,8 +297,7 @@ void display(void)
 	int i;
 	char titulo[100];
 	float rotX = 0, rotY = 0;
-	float w1 = 0, w2 = 0;
-
+	
 	MOUSEXf = ((float)MOUSEX - (float)(SIZEX / 2)) / (float)(SIZEX / 2);
 	MOUSEYf = -((float)MOUSEY - (float)(SIZEY / 2)) / (float)(SIZEY / 2);
 
@@ -468,6 +469,6 @@ void printString(char *s)
 {
 	glPushAttrib(GL_LIST_BIT);
 	glListBase(fontOffset);
-	glCallLists(strlen(s), GL_UNSIGNED_BYTE, (GLubyte *)s);
+	glCallLists((int)strlen(s), GL_UNSIGNED_BYTE, (GLubyte *)s);
 	glPopAttrib();
 }
