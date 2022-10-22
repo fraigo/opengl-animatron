@@ -83,6 +83,7 @@ float COLOR2 = 1, COLOR1 = 1;
 int VIEWMODE = 1, TYPE = 1, LIGHTMODE = -1;
 float LASTROTX1 = 0, LASTROTY1 = 0;
 float LASTROTX2 = 0, LASTROTY2 = 0;
+int PREVIEW =0;
 
 int SELECTED = 0;
 int NUMPOINTS = 0;
@@ -315,7 +316,7 @@ void start(void)
 }
 
 /* drawing function */
-void display(void)
+void display()
 {
 	int i;
 	char titulo[100];
@@ -446,7 +447,7 @@ void display(void)
         if (o[i].Y2 < miny){
             miny = o[i].Y2;
         }
-        o[i].display(SELECTED == i);
+        o[i].display(SELECTED == i && !PREVIEW);
     }
     
 	// piso
@@ -527,12 +528,19 @@ void keyboard(unsigned char key, int posX, int posY)
         init();
         start();
         SELECTED = 0;
+		PREVIEW = 1;
+		int time = 2000;
         for(int i=0; i<lastKey; i++){
             printf("Key %d : %d\n", i, lastkeys[i]);
             if (keys[i]==13){
                 break;
             }
-            glutTimerFunc(1000+i*100,review,lastkeys[i]);
+			int delay = 40;
+			if (lastkeys[i]==9){
+				delay=5;
+			}
+			time += delay;
+            glutTimerFunc(time,review,lastkeys[i]);
         }
         return;
     }
